@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Firebase Login & Sign Up</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .toggle-password { cursor: pointer; }
+  </style>
+</head>
+<body class="h-full bg-gradient-to-br from-purple-600 via-pink-500 to-red-500">
+
+  <div class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+      
+      <div class="bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden">
+        
+        <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-8 text-center">
+          <h1 id="form-title" class="text-4xl font-bold text-white mb-2">Welcome Back!</h1>
+          <p id="form-subtitle" class="text-white/80">Log in to continue</p>
+        </div>
+
+        <div class="p-8">
+          <form id="auth-form" novalidate>
+            
+            <div id="name-field" class="relative mb-6 hidden">
+              <i data-lucide="user" class="absolute left-4 top-4 h-5 w-5 text-gray-400"></i>
+              <input
+                type="text"
+                name="name"
+                placeholder="Full Name"
+                class="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                required
+              />
+            </div>
+
+            <div class="relative mb-6">
+              <i data-lucide="mail" class="absolute left-4 top-4 h-5 w-5 text-gray-400"></i>
+              <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                class="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                required
+              />
+            </div>
+
+            <div class="relative mb-6">
+              <i data-lucide="lock" class="absolute left-4 top-4 h-5 w-5 text-gray-400"></i>
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                id="password-input"
+                class="w-full pl-12 pr-12 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                required
+              />
+              <i data-lucide="eye-off" id="toggle-password" class="toggle-password absolute right-4 top-4 h-5 w-5 text-gray-400 hover:text-gray-600"></i>
+            </div>
+
+            <div id="login-options" class="flex items-center justify-between mb-6">
+              <label class="flex items-center cursor-pointer">
+                <input type="checkbox" class="w-4 h-4 text-purple-600 rounded focus:ring-purple-500" />
+                <span class="ml-2 text-sm text-gray-600">Remember me</span>
+              </label>
+              <a href="#" class="text-sm text-purple-600 hover:underline">Forgot password?</a>
+            </div>
+
+            <button
+              type="submit"
+              id="submit-btn"
+              class="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:shadow-lg transform hover:scale-105 transition duration-200"
+            >
+              Sign In
+            </button>
+          </form>
+
+          <div class="my-8 flex items-center">
+            <div class="flex-1 border-t border-gray-300"></div>
+            <span class="px-4 text-sm text-gray-500 bg-white">or</span>
+            <div class="flex-1 border-t border-gray-300"></div>
+          </div>
+
+          <div class="text-center">
+            <p class="text-gray-600">
+              <span id="toggle-text">Don't have an account?</span>
+              <button
+                type="button"
+                id="toggle-link"
+                class="font-semibold text-purple-600 hover:underline ml-1"
+              >
+                Sign Up
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <p class="mt-8 text-center text-white/70 text-sm">
+        © 2025 YourApp. All rights reserved.
+      </p>
+    </div>
+  </div>
+
+<script type="module">
+  
+  // 1. 🔥 FIREBASE CONFIGURATION (YOUR ACTUAL KEYS)
+  const firebaseConfig = {
+    apiKey: "AIzaSyBZSOoNw1ouEe_7b7hVyez4nn1NI-Qie2U",
+    authDomain: "myloginapp-b7055.firebaseapp.com",
+    projectId: "myloginapp-b7055",
+    storageBucket: "myloginapp-b7055.firebasestorage.app",
+    messagingSenderId: "852840846444",
+    appId: "1:852840846444:web:9c452bdfc6a89544b77449",
+    measurementId: "G-L3M790CXD2"
+  };
+
+  // 2. 📦 FIREBASE IMPORTS AND INITIALIZATION
+  // Note: We only import the services we need (app and auth), not analytics.
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword,
+    onAuthStateChanged 
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  // The analytics import and initialization are removed for simplicity, as they aren't critical for basic auth.
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // --- Front-End Toggling Logic (Unchanged) ---
+
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  const isLogin = { value: true };
+  const elements = {
+    title: document.getElementById('form-title'),
+    subtitle: document.getElementById('form-subtitle'),
+    nameField: document.getElementById('name-field'),
+    loginOptions: document.getElementById('login-options'),
+    submitBtn: document.getElementById('submit-btn'),
+    toggleText: document.getElementById('toggle-text'),
+    toggleLink: document.getElementById('toggle-link'),
+    passwordInput: document.getElementById('password-input'),
+    togglePasswordIcon: document.getElementById('toggle-password'),
+    form: document.getElementById('auth-form')
+  };
+
+  function switchToSignup() {
+    isLogin.value = false;
+    elements.title.textContent = "Create Account";
+    elements.subtitle.textContent = "Sign up to get started";
+    elements.nameField.classList.remove('hidden');
+    elements.loginOptions.classList.add('hidden');
+    elements.submitBtn.textContent = "Create Account";
+    elements.toggleText.textContent = "Already have an account?";
+    elements.toggleLink.textContent = "Log In";
+    elements.form.reset();
+  }
+
+  function switchToLogin() {
+    isLogin.value = true;
+    elements.title.textContent = "Welcome Back!";
+    elements.subtitle.textContent = "Log in to continue";
+    elements.nameField.classList.add('hidden');
+    elements.loginOptions.classList.remove('hidden');
+    elements.submitBtn.textContent = "Sign In";
+    elements.toggleText.textContent = "Don't have an account?";
+    elements.toggleLink.textContent = "Sign Up";
+    elements.form.reset();
+  }
+
+  elements.toggleLink.addEventListener('click', () => {
+    if (isLogin.value) switchToSignup();
+    else switchToLogin();
+  });
+
+  // Password visibility toggle
+  elements.togglePasswordIcon.addEventListener('click', () => {
+    const type = elements.passwordInput.type === 'password' ? 'text' : 'password';
+    elements.passwordInput.type = type;
+    elements.togglePasswordIcon.setAttribute('data-lucide', type === 'password' ? 'eye-off' : 'eye');
+    lucide.createIcons();
+  });
+
+  // 3. 🔑 FIREBASE AUTHENTICATION LOGIC (Replacing the demo submit)
+  
+  async function handleSignUp(email, password) {
+    try {
+      elements.submitBtn.textContent = "Creating...";
+      // Calls Firebase backend to create user
+      await createUserWithEmailAndPassword(auth, email, password); 
+      
+      alert("Sign Up successful! Redirecting...");
+      elements.form.reset();
+    } catch (error) {
+      elements.submitBtn.textContent = "Create Account";
+      const errorCode = error.code;
+      console.error("Sign Up Error:", errorCode, error.message);
+      alert(`Sign Up failed: ${getFriendlyErrorMessage(errorCode)}`);
+    }
+  }
+
+  async function handleLogin(email, password) {
+    try {
+      elements.submitBtn.textContent = "Signing In...";
+      // Calls Firebase backend to sign user in
+      await signInWithEmailAndPassword(auth, email, password); 
+      
+      alert("Login successful! Redirecting...");
+      elements.form.reset();
+    } catch (error) {
+      elements.submitBtn.textContent = "Sign In";
+      const errorCode = error.code;
+      console.error("Login Error:", errorCode, error.message);
+      alert(`Login failed: ${getFriendlyErrorMessage(errorCode)}`);
+    }
+  }
+
+  function getFriendlyErrorMessage(errorCode) {
+    switch (errorCode) {
+      case 'auth/email-already-in-use':
+        return 'This email is already registered. Try logging in.';
+      case 'auth/invalid-email':
+        return 'The email address is not valid.';
+      case 'auth/weak-password':
+        return 'The password is too weak. It must be at least 6 characters.';
+      case 'auth/user-not-found':
+      case 'auth/wrong-password':
+        return 'Invalid email or password.';
+      default:
+        return 'An unexpected error occurred. Please try again.';
+    }
+  }
+
+  // 4. 🔗 MAIN FORM SUBMISSION HANDLER
+  elements.form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(elements.form);
+    const email = formData.get('email');
+    const password = formData.get('password');
+
+    if (!email || !password) {
+      alert("Please fill in both email and password.");
+      return;
+    }
+
+    if (isLogin.value) {
+      handleLogin(email, password);
+    } else {
+      handleSignUp(email, password);
+    }
+  });
+
+  // 5. 👂 AUTH STATE LISTENER (Optional for real-time changes)
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log(`User signed in: ${user.email}. You would redirect them now.`);
+    } else {
+      console.log("User signed out.");
+    }
+  });
+
+</script>
+</body>
+</html>
