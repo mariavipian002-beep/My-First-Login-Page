@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nebula • Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .glass {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+    }
+    video {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+    }
+    .gradient-text {
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+  </style>
+</head>
+<body class="h-full overflow-hidden text-white">
+
+  <video autoplay loop muted playsinline class="fixed inset-0 w-full h-full object-cover">
+    <source src="https://www.dropbox.com/scl/fi/loa5e0ba413ruudn1enp7/58193-487176852_small.mp4?rlkey=mhxq721pq878khfmm7vc46ds8&st=c3ptxvzq&dl=1" type="video/mp4">
+  </video>
+
+  <div class="min-h-screen flex flex-col">
+
+    <nav class="glass backdrop-blur-xl border-b border-white/10">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+            <i data-lucide="orbit" class="w-6 h-6"></i>
+          </div>
+          <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-300 to-pink-300 gradient-text">Nebula</h1>
+        </div>
+
+        <div class="flex items-center space-x-6">
+          <span id="user-email" class="text-white/80"></span>
+          <button id="logout-btn" class="flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 transition">
+            <i data-lucide="log-out" class="w-5 h-5"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="flex-1 flex items-center justify-center p-8">
+      <div class="text-center max-w-4xl">
+        <h2 class="text-6xl md:text-7xl font-extrabold mb-6">
+          <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 gradient-text">
+            Welcome to the Cosmos
+          </span>
+        </h2>
+        <p class="text-2xl md:text-3xl text-white/80 mb-12">
+          Hello <span id="greeting-name" class="text-purple-300 font-semibold"></span>
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+          <div class="glass rounded-2xl p-8 border border-white/20 hover:border-purple-500/50 transition">
+            <i data-lucide="rocket" class="w-16 h-16 mx-auto mb-4 text-purple-400"></i>
+            <h3 class="text-2xl font-bold mb-2">Launch Projects</h3>
+            <p class="text-white/70">Start building something amazing today</p>
+          </div>
+
+          <div class="glass rounded-2xl p-8 border border-white/20 hover:border-pink-500/50 transition">
+            <i data-lucide="stars" class="w-16 h-16 mx-auto mb-4 text-pink-400"></i>
+            <h3 class="text-2xl font-bold mb-2">Explore Features</h3>
+            <p class="text-white/70">Discover everything Nebula has to offer</p>
+          </div>
+
+          <div class="glass rounded-2xl p-8 border border-white/20 hover:border-cyan-500/50 transition">
+            <i data-lucide="users" class="w-16 h-16 mx-auto mb-4 text-cyan-400"></i>
+            <h3 class="text-2xl font-bold mb-2">Join Community</h3>
+            <p class="text-white/70">Connect with fellow cosmic travelers</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="glass backdrop-blur-xl border-t border-white/10 py-6 text-center">
+      <p class="text-white/50 text-sm">
+        © 2025 Nebula • Made with <span class="text-pink-400">♥</span> in the Cosmos
+      </p>
+    </footer>
+  </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBZSOoNw1ouEe_7b7hVyez4nn1NI-Qie2U",
+    authDomain: "myloginapp-b7055.firebaseapp.com",
+    projectId: "myloginapp-b7055",
+    storageBucket: "myloginapp-b7055.firebasestorage.app",
+    messagingSenderId: "852840846444",
+    appId: "1:852840846444:web:9c452bdfc6a89544b77449"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  lucide.createIcons();
+
+  const userEmailEl = document.getElementById('user-email');
+  const greetingNameEl = document.getElementById('greeting-name');
+  const logoutBtn = document.getElementById('logout-btn');
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in
+      const displayName = user.displayName || user.email.split('@')[0];
+      userEmailEl.textContent = user.email;
+      greetingNameEl.textContent = displayName;
+
+      // Optional: Show a nice welcome toast
+      showToast(`Welcome back, ${displayName}! 🌌`, 'success');
+      
+    } else {
+      // No user → redirect to login
+      window.location.href = 'index.html'; // ← change if your login file has another name
+    }
+  });
+
+  logoutBtn.addEventListener('click', async () => {
+    await signOut(auth);
+    showToast('Logged out successfully 👋', 'info');
+    setTimeout(() => window.location.href = 'index.html', 1000);
+  });
+
+  // Simple toast notification (no extra library)
+  function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.className = `fixed bottom-8 left-1/2 -translate-x-1/2 px-8 py-4 rounded-xl glass border text-lg font-medium z-50 transition-opacity duration-500
+      ${type === 'success' ? 'border-green-500/50' : 'border-blue-500/50'}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.style.opacity = '1', 100);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 500);
+    }, 3000);
+  }
+</script>
+</body>
+</html>
