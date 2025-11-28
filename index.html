@@ -38,7 +38,6 @@
 </head>
 <body class="h-full overflow-hidden text-white">
 
-  <!-- Stunning Animated Background -->
   <video autoplay loop muted playsinline class="fixed inset-0 w-full h-full object-cover">
     <source src="https://www.dropbox.com/scl/fi/loa5e0ba413ruudn1enp7/58193-487176852_small.mp4?rlkey=mhxq721pq878khfmm7vc46ds8&st=c3ptxvzq&dl=1" type="video/mp4">
   </video>
@@ -46,10 +45,8 @@
   <div class="min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-md">
       
-      <!-- Glassmorphic Card -->
       <div class="glass rounded-3xl overflow-hidden border-t border-white/20">
         
-        <!-- Header -->
         <div class="p-8 text-center bg-gradient-to-b from-white/10 to-transparent backdrop-blur-xl">
           <h1 id="form-title" class="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-purple-300 to-pink-300">
             Welcome Back
@@ -60,7 +57,6 @@
         <div class="p-8">
           <form id="auth-form" novalidate class="space-y-6">
             
-            <!-- Name Field (Signup only) -->
             <div id="name-field" class="relative hidden">
               <i data-lucide="user" class="absolute left-4 top-4 h-5 w-5 text-white/60"></i>
               <input
@@ -72,7 +68,6 @@
               />
             </div>
 
-            <!-- Email -->
             <div class="relative">
               <i data-lucide="mail" class="absolute left-4 top-4 h-5 w-5 text-white/60"></i>
               <input
@@ -84,7 +79,6 @@
               />
             </div>
 
-            <!-- Password -->
             <div class="relative">
               <i data-lucide="lock" class="absolute left-4 top-4 h-5 w-5 text-white/60"></i>
               <input
@@ -98,7 +92,6 @@
               <i data-lucide="eye-off" id="toggle-password" class="toggle-password absolute right-4 top-4 h-5 w-5 text-white/60 hover:text-white cursor-pointer"></i>
             </div>
 
-            <!-- Login Options -->
             <div id="login-options" class="flex items-center justify-between text-sm">
               <label class="flex items-center cursor-pointer">
                 <input type="checkbox" class="w-4 h-4 rounded border-white/30 text-purple-400 focus:ring-purple-500" />
@@ -107,7 +100,6 @@
               <a href="#" class="text-purple-300 hover:text-purple-200 transition">Forgot password?</a>
             </div>
 
-            <!-- Submit Button -->
             <button
               type="submit"
               id="submit-btn"
@@ -217,22 +209,26 @@
     lucide.createIcons();
   });
 
+  // 👇 FIXED: Redirection added after successful sign-up
   async function handleSignUp(email, password) {
     try {
       elements.submitBtn.textContent = "Creating...";
       await createUserWithEmailAndPassword(auth, email, password);
       alert("Account created successfully! 🌌");
+      window.location.href = 'dashboard.html'; 
     } catch (error) {
       elements.submitBtn.textContent = "Create Account";
       alert(getFriendlyErrorMessage(error.code));
     }
   }
 
+  // 👇 FIXED: Redirection added after successful login
   async function handleLogin(email, password) {
     try {
       elements.submitBtn.textContent = "Entering...";
       await signInWithEmailAndPassword(auth, email, password);
       alert("Welcome back! 🚀");
+      window.location.href = 'dashboard.html';
     } catch (error) {
       elements.submitBtn.textContent = "Sign In";
       alert(getFriendlyErrorMessage(error.code));
