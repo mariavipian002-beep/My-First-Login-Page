@@ -3,94 +3,137 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Firebase Login & Sign Up</title>
+  <title>Login • Nebula</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <style>
-    body { font-family: 'Inter', sans-serif; }
-    .toggle-password { cursor: pointer; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .glass {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+    }
+    .glass-input {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    .glass-input:focus {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(147, 51, 234, 0.6);
+      box-shadow: 0 0 20px rgba(147, 51, 234, 0.4);
+    }
+    video {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+    }
   </style>
 </head>
-<body class="h-full bg-gradient-to-br from-purple-600 via-pink-500 to-red-500">
+<body class="h-full overflow-hidden text-white">
+
+  <!-- Stunning Animated Background -->
+  <video autoplay loop muted playsinline class="fixed inset-0 w-full h-full object-cover">
+    <source src="https://www.dropbox.com/scl/fi/loa5e0ba413ruudn1enp7/58193-487176852_small.mp4?rlkey=mhxq721pq878khfmm7vc46ds8&st=c3ptxvzq&dl=1" type="video/mp4">
+  </video>
 
   <div class="min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-md">
       
-      <div class="bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden">
+      <!-- Glassmorphic Card -->
+      <div class="glass rounded-3xl overflow-hidden border-t border-white/20">
         
-        <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-8 text-center">
-          <h1 id="form-title" class="text-4xl font-bold text-white mb-2">Welcome Back!</h1>
-          <p id="form-subtitle" class="text-white/80">Log in to continue</p>
+        <!-- Header -->
+        <div class="p-8 text-center bg-gradient-to-b from-white/10 to-transparent backdrop-blur-xl">
+          <h1 id="form-title" class="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-purple-300 to-pink-300">
+            Welcome Back
+          </h1>
+          <p id="form-subtitle" class="text-white/70 text-lg">Log in to continue your journey</p>
         </div>
 
         <div class="p-8">
-          <form id="auth-form" novalidate>
+          <form id="auth-form" novalidate class="space-y-6">
             
-            <div id="name-field" class="relative mb-6 hidden">
-              <i data-lucide="user" class="absolute left-4 top-4 h-5 w-5 text-gray-400"></i>
+            <!-- Name Field (Signup only) -->
+            <div id="name-field" class="relative hidden">
+              <i data-lucide="user" class="absolute left-4 top-4 h-5 w-5 text-white/60"></i>
               <input
                 type="text"
                 name="name"
                 placeholder="Full Name"
-                class="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                class="glass-input w-full pl-12 pr-4 py-4 rounded-xl focus:outline-none text-white placeholder-white/50"
                 required
               />
             </div>
 
-            <div class="relative mb-6">
-              <i data-lucide="mail" class="absolute left-4 top-4 h-5 w-5 text-gray-400"></i>
+            <!-- Email -->
+            <div class="relative">
+              <i data-lucide="mail" class="absolute left-4 top-4 h-5 w-5 text-white/60"></i>
               <input
                 type="email"
                 name="email"
                 placeholder="Email Address"
-                class="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                class="glass-input w-full pl-12 pr-4 py-4 rounded-xl focus:outline-none text-white placeholder-white/50"
                 required
               />
             </div>
 
-            <div class="relative mb-6">
-              <i data-lucide="lock" class="absolute left-4 top-4 h-5 w-5 text-gray-400"></i>
+            <!-- Password -->
+            <div class="relative">
+              <i data-lucide="lock" class="absolute left-4 top-4 h-5 w-5 text-white/60"></i>
               <input
                 type="password"
                 name="password"
                 placeholder="Password"
                 id="password-input"
-                class="w-full pl-12 pr-12 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                class="glass-input w-full pl-12 pr-12 py-4 rounded-xl focus:outline-none text-white placeholder-white/50"
                 required
               />
-              <i data-lucide="eye-off" id="toggle-password" class="toggle-password absolute right-4 top-4 h-5 w-5 text-gray-400 hover:text-gray-600"></i>
+              <i data-lucide="eye-off" id="toggle-password" class="toggle-password absolute right-4 top-4 h-5 w-5 text-white/60 hover:text-white cursor-pointer"></i>
             </div>
 
-            <div id="login-options" class="flex items-center justify-between mb-6">
+            <!-- Login Options -->
+            <div id="login-options" class="flex items-center justify-between text-sm">
               <label class="flex items-center cursor-pointer">
-                <input type="checkbox" class="w-4 h-4 text-purple-600 rounded focus:ring-purple-500" />
-                <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                <input type="checkbox" class="w-4 h-4 rounded border-white/30 text-purple-400 focus:ring-purple-500" />
+                <span class="ml-2 text-white/80">Remember me</span>
               </label>
-              <a href="#" class="text-sm text-purple-600 hover:underline">Forgot password?</a>
+              <a href="#" class="text-purple-300 hover:text-purple-200 transition">Forgot password?</a>
             </div>
 
+            <!-- Submit Button -->
             <button
               type="submit"
               id="submit-btn"
-              class="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:shadow-lg transform hover:scale-105 transition duration-200"
+              class="w-full py-4 mt-4 font-semibold text-white rounded-xl
+                     bg-gradient-to-r from-purple-600/80 to-pink-600/80
+                     hover:from-purple-500 hover:to-pink-500
+                     backdrop-blur-xl border border-white/20
+                     shadow-2xl transform hover:scale-[1.02] transition duration-300"
             >
               Sign In
             </button>
           </form>
 
           <div class="my-8 flex items-center">
-            <div class="flex-1 border-t border-gray-300"></div>
-            <span class="px-4 text-sm text-gray-500 bg-white">or</span>
-            <div class="flex-1 border-t border-gray-300"></div>
+            <div class="flex-1 border-t border-white/20"></div>
+            <span class="px-4 text-sm text-white/50">or</span>
+            <div class="flex-1 border-t border-white/20"></div>
           </div>
 
           <div class="text-center">
-            <p class="text-gray-600">
+            <p class="text-white/80">
               <span id="toggle-text">Don't have an account?</span>
               <button
                 type="button"
                 id="toggle-link"
-                class="font-semibold text-purple-600 hover:underline ml-1"
+                class="font-bold text-purple-300 hover:text-purple-200 ml-2 transition"
               >
                 Sign Up
               </button>
@@ -99,15 +142,14 @@
         </div>
       </div>
 
-      <p class="mt-8 text-center text-white/70 text-sm">
-        © 2025 YourApp. All rights reserved.
+      <p class="mt-10 text-center text-white/50 text-sm tracking-wider">
+        © 2025 Nebula • Made with <span class="text-pink-400">♥</span> in the Cosmos
       </p>
     </div>
   </div>
 
 <script type="module">
-  
-  // 1. 🔥 FIREBASE CONFIGURATION (YOUR ACTUAL KEYS)
+  // Firebase Config (unchanged)
   const firebaseConfig = {
     apiKey: "AIzaSyBZSOoNw1ouEe_7b7hVyez4nn1NI-Qie2U",
     authDomain: "myloginapp-b7055.firebaseapp.com",
@@ -118,23 +160,12 @@
     measurementId: "G-L3M790CXD2"
   };
 
-  // 2. 📦 FIREBASE IMPORTS AND INITIALIZATION
-  // Note: We only import the services we need (app and auth), not analytics.
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { 
-    getAuth, 
-    createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword,
-    onAuthStateChanged 
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  // The analytics import and initialization are removed for simplicity, as they aren't critical for basic auth.
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  // --- Front-End Toggling Logic (Unchanged) ---
-
-  // Initialize Lucide icons
   lucide.createIcons();
 
   const isLogin = { value: true };
@@ -153,8 +184,8 @@
 
   function switchToSignup() {
     isLogin.value = false;
-    elements.title.textContent = "Create Account";
-    elements.subtitle.textContent = "Sign up to get started";
+    elements.title.textContent = "Join the Cosmos";
+    elements.subtitle.textContent = "Create your account and explore";
     elements.nameField.classList.remove('hidden');
     elements.loginOptions.classList.add('hidden');
     elements.submitBtn.textContent = "Create Account";
@@ -165,8 +196,8 @@
 
   function switchToLogin() {
     isLogin.value = true;
-    elements.title.textContent = "Welcome Back!";
-    elements.subtitle.textContent = "Log in to continue";
+    elements.title.textContent = "Welcome Back";
+    elements.subtitle.textContent = "Log in to continue your journey";
     elements.nameField.classList.add('hidden');
     elements.loginOptions.classList.remove('hidden');
     elements.submitBtn.textContent = "Sign In";
@@ -176,11 +207,9 @@
   }
 
   elements.toggleLink.addEventListener('click', () => {
-    if (isLogin.value) switchToSignup();
-    else switchToLogin();
+    isLogin.value ? switchToSignup() : switchToLogin();
   });
 
-  // Password visibility toggle
   elements.togglePasswordIcon.addEventListener('click', () => {
     const type = elements.passwordInput.type === 'password' ? 'text' : 'password';
     elements.passwordInput.type = type;
@@ -188,84 +217,52 @@
     lucide.createIcons();
   });
 
-  // 3. 🔑 FIREBASE AUTHENTICATION LOGIC (Replacing the demo submit)
-  
   async function handleSignUp(email, password) {
     try {
       elements.submitBtn.textContent = "Creating...";
-      // Calls Firebase backend to create user
-      await createUserWithEmailAndPassword(auth, email, password); 
-      
-      alert("Sign Up successful! Redirecting...");
-      elements.form.reset();
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert("Account created successfully! 🌌");
     } catch (error) {
       elements.submitBtn.textContent = "Create Account";
-      const errorCode = error.code;
-      console.error("Sign Up Error:", errorCode, error.message);
-      alert(`Sign Up failed: ${getFriendlyErrorMessage(errorCode)}`);
+      alert(getFriendlyErrorMessage(error.code));
     }
   }
 
   async function handleLogin(email, password) {
     try {
-      elements.submitBtn.textContent = "Signing In...";
-      // Calls Firebase backend to sign user in
-      await signInWithEmailAndPassword(auth, email, password); 
-      
-      alert("Login successful! Redirecting...");
-      elements.form.reset();
+      elements.submitBtn.textContent = "Entering...";
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("Welcome back! 🚀");
     } catch (error) {
       elements.submitBtn.textContent = "Sign In";
-      const errorCode = error.code;
-      console.error("Login Error:", errorCode, error.message);
-      alert(`Login failed: ${getFriendlyErrorMessage(errorCode)}`);
+      alert(getFriendlyErrorMessage(error.code));
     }
   }
 
-  function getFriendlyErrorMessage(errorCode) {
-    switch (errorCode) {
-      case 'auth/email-already-in-use':
-        return 'This email is already registered. Try logging in.';
-      case 'auth/invalid-email':
-        return 'The email address is not valid.';
-      case 'auth/weak-password':
-        return 'The password is too weak. It must be at least 6 characters.';
-      case 'auth/user-not-found':
-      case 'auth/wrong-password':
-        return 'Invalid email or password.';
-      default:
-        return 'An unexpected error occurred. Please try again.';
-    }
+  function getFriendlyErrorMessage(code) {
+    const messages = {
+      'auth/email-already-in-use': 'This email is already taken.',
+      'auth/invalid-email': 'Please enter a valid email.',
+      'auth/weak-password': 'Password should be at least 6 characters.',
+      'auth/user-not-found': 'No account found with this email.',
+      'auth/wrong-password': 'Incorrect password.'
+    };
+    return messages[code] || 'Something went wrong. Try again.';
   }
 
-  // 4. 🔗 MAIN FORM SUBMISSION HANDLER
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const formData = new FormData(elements.form);
-    const email = formData.get('email');
-    const password = formData.get('password');
+    const email = e.target.email.value.trim();
+    const password = e.target.password.value;
 
-    if (!email || !password) {
-      alert("Please fill in both email and password.");
-      return;
-    }
+    if (!email || !password) return alert("Please fill all fields");
 
-    if (isLogin.value) {
-      handleLogin(email, password);
-    } else {
-      handleSignUp(email, password);
-    }
+    isLogin.value ? handleLogin(email, password) : handleSignUp(email, password);
   });
 
-  // 5. 👂 AUTH STATE LISTENER (Optional for real-time changes)
   onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log(`User signed in: ${user.email}. You would redirect them now.`);
-    } else {
-      console.log("User signed out.");
-    }
+    if (user) console.log("Active user:", user.email);
   });
-
 </script>
 </body>
 </html>
