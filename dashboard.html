@@ -101,6 +101,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+  // Firebase Config (Must match the one in index.html)
   const firebaseConfig = {
     apiKey: "AIzaSyBZSOoNw1ouEe_7b7hVyez4nn1NI-Qie2U",
     authDomain: "myloginapp-b7055.firebaseapp.com",
@@ -119,6 +120,7 @@
   const greetingNameEl = document.getElementById('greeting-name');
   const logoutBtn = document.getElementById('logout-btn');
 
+  // Security Check: Redirects to index.html if no user is signed in
   onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in
@@ -131,7 +133,7 @@
       
     } else {
       // No user → redirect to login
-      window.location.href = 'index.html'; // ← change if your login file has another name
+      window.location.href = 'index.html'; 
     }
   });
 
